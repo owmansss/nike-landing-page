@@ -1,10 +1,10 @@
 import SignInForm from '../../components/SignInForm'
 import SignUpForm from '../../components/SignUpForm'
 import officeThumb from '../../assets/images/office.png'
-const SignIn = () => {
+const Auth = () => {
   return (
-    <div className=' inline-flex justify-evenly bg-slate-100 h-fit w-full'>
-      <div className='flex justify-start '>
+    <div className=' inline-flex justify-evenly bg-slate-50 h-fit w-full'>
+      <div className='flex justify-start mt-5 mb-5 shadow-xl shadow-slate-300'>
         <SignInForm />
         <SignUpForm />
       </div>
@@ -15,4 +15,4 @@ const SignIn = () => {
   )
 }
 
-export default SignIn
+export default Auth
