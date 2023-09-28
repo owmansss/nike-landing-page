@@ -2,8 +2,19 @@ import { hamburger } from '../assets/icons'
 import { headerLogo } from '../assets/images'
 import { navLinks } from '../constant'
 import { Outlet } from 'react-router-dom'
+import { useContext } from 'react'
+import { UserContext } from '../contexts/user-contexts'
+import { signOutUser } from '../utils/firebase.utils'
 
 const Nav = () => {
+  const { currentUser, setCurrentUser } = useContext(UserContext)
+
+  const signOutHandler = async () => {
+    await signOutUser()
+    setCurrentUser(null)
+  }
+  console.log(currentUser)
+
   return (
     <header className='padding-x py-8 absolute z-10 w-full'>
       <nav className='h-20 p-10 flex justify-between items-center max-container bg-slate-50 shadow-lg shadow-slate-200 rounded-md mb-20'>
@@ -29,7 +40,14 @@ const Nav = () => {
           ))}
         </ul>
         <div className='flex gap-2 text-lg leading-normal font-medium font-montserrat max-lg:hidden wide:mr-24'>
-          <a href='auth'>Sign in / Sign Up</a>
+          {currentUser ? (
+            <a href='auth' onClick={signOutHandler}>
+              {' '}
+              Sign Out{' '}
+            </a>
+          ) : (
+            <a href='auth'>Sign in</a>
+          )}
         </div>
         <div className='hidden max-lg:block'>
           <img src={hamburger} alt='hamburger icon' width={25} height={25} />

@@ -3,14 +3,18 @@ import {
   signInWithGooglePopup,
   createUserDocFromAuth,
 } from '../utils/firebase.utils'
-import { useState } from 'react'
+import { useState, useContext } from 'react'
+import { UserContext } from '../contexts/user-contexts'
 import FormInput from './form-input/form-input.component'
 
 const SignUpForm = () => {
+  const { setCurrentUser } = useContext(UserContext)
   const logGoogleuser = async () => {
     const { user } = await signInWithGooglePopup()
     await createUserDocFromAuth(user)
   }
+
+
   const handleSubmit = async (event) => {
     event.preventDefault()
     if (password !== confirmPassword) {
@@ -19,6 +23,7 @@ const SignUpForm = () => {
     }
     try {
       const { user } = await createAuthUserWithEmailAndPassword(email, password)
+      setCurrentUser(user)
       await createUserDocFromAuth(user, { displayName })
       resetFormFields()
     } catch (error) {
@@ -26,6 +31,7 @@ const SignUpForm = () => {
     }
   }
   const defaultFormFields = {
+    displayName:'',
     email: '',
     password: '',
     confirmPassword: '',

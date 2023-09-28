@@ -3,10 +3,40 @@ import {
   createUserDocFromAuth,
   signInAuthUserWithEmailAndPassword,
 } from '../utils/firebase.utils'
-import { useState } from 'react'
+import { useState, useContext } from 'react'
+
+import { UserContext } from '../contexts/user-contexts'
 import FormInput from './form-input/form-input.component'
 
 export default function SignInForm() {
+  const { setCurrentUser } = useContext(UserContext)
+  const resetFormFields = () => {
+    setFormFields(defaultFormFields)
+  }
+  const defaultFormFields = {
+    email: '',
+    password: '',
+  }
+  const [formFields, setFormFields] = useState(defaultFormFields)
+  const { email, password } = formFields
+
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    try {
+      const { user } = await signInAuthUserWithEmailAndPassword(email, password)
+      setCurrentUser(user)
+      alert('Welcome brotah')
+      resetFormFields()
+    } catch (error) {
+      alert(error.code)
+    }
+  }
+
+  const handleChange = (event) => {
+    const { name, value } = event.target
+    setFormFields({ ...formFields, [name]: value })
+  }
+
   const signInWithGoogle = async () => {
     try {
       const { user } = await signInWithGooglePopup()
@@ -15,30 +45,7 @@ export default function SignInForm() {
       alert(error.code)
     }
   }
-  const handleSubmit = async (event) => {
-    event.preventDefault()
-    try {
-      const response = await signInAuthUserWithEmailAndPassword(email, password)
-      console.log(response)
-      alert('Welcome brotah')
-      resetFormFields()
-    } catch (error) {
-      alert(error.code)
-    }
-  }
-  const defaultFormFields = {
-    email: '',
-    password: '',
-  }
-  const resetFormFields = () => {
-    setFormFields(defaultFormFields)
-  }
-  const [formFields, setFormFields] = useState(defaultFormFields)
-  const { email, password } = formFields
-  const handleChange = (event) => {
-    const { name, value } = event.target
-    setFormFields({ ...formFields, [name]: value })
-  }
+
   return (
     <div className=''>
       <div className='grid justify-start ml-12 mt-16 shadow-slate-100 shadow-inner mb-10 rounded-md mr-5'>
